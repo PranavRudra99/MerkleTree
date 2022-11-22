@@ -30,6 +30,7 @@ string* getTreeLeaves(int n);
 string* constructBaseLevel(string* currentVals, int n);
 string* constructUpperLevel(string* currentLevel, int n);
 string** constructTree(int n, string transaction);
+void test(string**tree, string branchFile, string rootFile, int treeSize);
 
 int main(int argc, char** argv){
   string rootFile, branchFile;
@@ -60,6 +61,19 @@ int main(int argc, char** argv){
   }
   cout << "Enter valid Input!!" << endl;
   return -1;
+}
+
+void test(string**tree, string branchFile, string rootFile, int treeSize){
+  int exponent = getExponentValue(treeSize);
+  int count = 0;
+  for(int i = 0; i < exponent; i++){
+    bool flag = isAuthorizedTransaction(tree, i, branchFile, rootFile, treeSize);
+    cout << "Tx" << (i + 1) << ": " << flag << endl;
+    if(flag){
+      count++;
+    }
+  }
+  cout << endl << count << endl;
 }
 
 bool isAuthorizedTransaction(string** tree, int transactionId, string branchFile, string rootFile, int treeSize){
