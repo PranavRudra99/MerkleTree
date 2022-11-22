@@ -19,6 +19,7 @@ bool areEqual(char* buffer, string hash);
 bool isValidTransaction(int transactionId, int n);
 bool validRoot(string hash, string rootFile);
 bool validBranch(string** tree, int transactionId, string branchFile, int treeSize);
+bool isAuthorizedTransaction(string** tree, int transactionId, string branchFile, string rootFile, int treeSize);
 int getExponentValue(int n);
 int getFileSize(std::string fileName);
 int getMerkleTreeHeight(string branchFile);
@@ -48,18 +49,8 @@ int main(int argc, char** argv){
         cout << "no" << endl;
         return 1;
       }
-      string root = "";
       string** tree = constructTree(treeSize, transaction);
-      root = tree[treeSize][0];
-      bool rootSatisfied = false;
-      bool branchSatisfied = false;
-      if(validBranch(tree, transactionId, branchFile, treeSize)){
-        branchSatisfied = true;
-      }
-      if(validRoot(root, rootFile)){
-        rootSatisfied = true;
-      }
-      if(rootSatisfied && branchSatisfied){
+      if(isAuthorizedTransaction(tree, transactionId, branchFile, rootFile, treeSize)){
         cout << "yes" << endl;
       }else{
         cout << "no" << endl;
@@ -69,6 +60,20 @@ int main(int argc, char** argv){
   }
   cout << "Enter valid Input!!" << endl;
   return -1;
+}
+
+bool isAuthorizedTransaction(string** tree, int transactionId, string branchFile, string rootFile, int treeSize){
+  string root = "";
+  root = tree[treeSize][0];
+  bool rootSatisfied = false;
+  bool branchSatisfied = false;
+  if(validBranch(tree, transactionId, branchFile, treeSize)){
+    branchSatisfied = true;
+  }
+  if(validRoot(root, rootFile)){
+    rootSatisfied = true;
+  }
+  return rootSatisfied && branchSatisfied;
 }
 
 bool isPrefixTx(string transaction){
@@ -179,6 +184,8 @@ bool areEqual(char* buffer, string hash){
       }
       j++;
     }
+    /*cout << hash << endl;
+    cout << hexHash << endl << endl;*/
     return equals;
 }
 
