@@ -45,7 +45,7 @@ int main(int argc, char** argv){
         return 1;
       }
       int transactionId = atoi(transaction.substr(2).c_str()) - 1;
-      int treeSize = getMerkleTreeHeight(branchFile) - 1;
+      int treeSize = getMerkleTreeHeight(branchFile);
       if(!isValidTransaction(transactionId, treeSize)){
         cout << "no" << endl;
         return 1;
@@ -174,10 +174,16 @@ bool validBranch(string** tree, int transactionId, string branchFile, int treeSi
   int buffSize = 32;
   char* buffer = new char[buffSize];
   bool valid = true;
-  for(int i = 0; i <= treeSize; i++){
+  for(int i = 0; i < treeSize; i++){
     branch.seekg(33*i);
     size_t actual = branch.readsome(buffer, buffSize);
-    std::string hash = tree[i][transactionId];
+    std::string hash;
+    if(transactionId % 2 == 1){
+      hash = tree[i][transactionId - 1];
+    }
+    else{
+      hash = tree[i][transactionId + 1];
+    }
     valid = valid && areEqual(buffer, hash);
     transactionId = transactionId/2;
   }

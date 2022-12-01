@@ -97,9 +97,16 @@ void createBranch(string** tree, string transaction, int n){
   int transactionId = atoi(transaction.substr(2).c_str()) - 1;
   createEmptyTextFile(branchName);
   std::ofstream branch(branchName, std::ios::binary);
-  for(int i = 0; i <= n; i++)
+  for(int i = 0; i < n; i++)
   {
-    std::string hash = tree[i][transactionId] + "0A";
+    std::string hash;
+    if(transactionId % 2 == 1){
+      hash = tree[i][transactionId - 1];
+    }
+    else{
+      hash = tree[i][transactionId + 1];
+    }
+    hash = hash + "0A";
     for (size_t j = 0; j < hash.length(); j += 2)
     {
       uint16_t byte;
